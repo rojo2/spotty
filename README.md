@@ -39,6 +39,14 @@ To play the previous song in the playlist:
 spotty prev
 ```
 
+## Status
+
+See if it is currently playing and which song it's being played:
+
+```sh
+spotty status
+```
+
 ## Installation
 
 To install spotty, just clone this repo and execute `spotty install`:
@@ -49,8 +57,8 @@ cd spotty
 ./spotty install
 ```
 
-NOTE: This process installs Spotty but it also installs Spotify if it is not
-found. The Spotify installation follows this [instructions](https://www.spotify.com/es/download/linux/)
+> NOTE: This process installs Spotty but it also installs Spotify if it is not
+> found. The Spotify installation follows this [instructions](https://www.spotify.com/es/download/linux/)
 
 # Xubuntu Keyboard shortcuts
 
