@@ -2,6 +2,41 @@
 COLOR="\x1B[0;32m"
 NO_COLOR="\x1B[0m"
 case $1 in
+  status)
+    if pgrep -x "spotify" > /dev/null
+    then
+      STATUS=`qdbus org.mpris.MediaPlayer2.spotify\
+            /org/mpris/MediaPlayer2\
+            org.freedesktop.DBus.Properties.Get\
+            org.mpris.MediaPlayer2.Player\
+            PlaybackStatus`
+
+      echo -e "${COLOR}Spotify${NO_COLOR} is ${COLOR}$STATUS${NO_COLOR}"
+    else
+      echo -e "${COLOR}Spotify${NO_COLOR} is ${COLOR}Not running${NO_COLOR}"
+    fi
+  ;;
+  metadata)
+    if pgrep -x "spotify" > /dev/null
+    then
+      METADATA=`qdbus \
+            org.mpris.MediaPlayer2.spotify\
+            /org/mpris/MediaPlayer2\
+            org.freedesktop.DBus.Properties.Get\
+            org.mpris.MediaPlayer2.Player\
+            Metadata`
+
+      ALBUM=$(echo "$METADATA" | grep -ozP "(?<=xesam\:album\: )(.*\n)")
+      ALBUM_ARTIST=$(echo "$METADATA" | grep -ozP "(?<=xesam\:albumArtist\: )(.*\n)")
+      ARTIST=$(echo "$METADATA" | grep -ozP "(?<=xesam\:artist\: )(.*\n)")
+      SONG=$(echo "$METADATA" | grep -ozP "(?<=xesam\:title\: )(.*\n)")
+      echo -e "Artist: ${COLOR}$ARTIST${NO_COLOR}"
+      echo -e "Album: ${COLOR}$ALBUM${NO_COLOR}"
+      echo -e "Song: ${COLOR}$SONG${NO_COLOR}"
+    else
+      echo -e "${COLOR}Spotify${NO_COLOR} is ${COLOR}Not running${NO_COLOR}"
+    fi
+  ;;
   play)
     if pgrep -x "spotify" > /dev/null
     then
@@ -16,6 +51,14 @@ case $1 in
       dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify\
                 /org/mpris/MediaPlayer2\
                 org.mpris.MediaPlayer2.Player.Pause > /dev/null
+    fi
+  ;;
+  stop)
+    if pgrep -x "spotify" > /dev/null
+    then
+      dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify\
+                /org/mpris/MediaPlayer2\
+                org.mpris.MediaPlayer2.Player.Stop > /dev/null
     fi
   ;;
   play-pause|toggle)
@@ -44,10 +87,18 @@ case $1 in
                 org.mpris.MediaPlayer2.Player.Previous > /dev/null
     fi
   ;;
-  open)
+  close|quit)
+    if pgrep -x "spotify" > /dev/null
+    then
+      dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify\
+                /org/mpris/MediaPlayer2\
+                org.mpris.MediaPlayer2.Player.Quit > /dev/null
+    fi
+  ;;
+  open|start)
     if ! pgrep -x "spotify" > /dev/null
     then
-      spotify
+      spotify &
     fi
   ;;
   version)
