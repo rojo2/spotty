@@ -22,12 +22,28 @@ case $1 in
             org.mpris.MediaPlayer2.Player\
             PlaybackStatus`
 
-      echo -e "${COLOR}Spotify${NO_COLOR} is ${COLOR}$STATUS${NO_COLOR}"
+      METADATA=`qdbus \
+            org.mpris.MediaPlayer2.spotify\
+            /org/mpris/MediaPlayer2\
+            org.freedesktop.DBus.Properties.Get\
+            org.mpris.MediaPlayer2.Player\
+            Metadata`
+
+      echo -e "${COLOR}Spotify${NO_COLOR} is ${COLOR}$STATUS${NO_COLOR}\n"
+
+      ALBUM=$(echo "$METADATA" | grep -ozP "(?<=xesam\:album\: )(.*\n)")
+      ALBUM_ARTIST=$(echo "$METADATA" | grep -ozP "(?<=xesam\:albumArtist\: )(.*\n)")
+      ARTIST=$(echo "$METADATA" | grep -ozP "(?<=xesam\:artist\: )(.*\n)")
+      SONG=$(echo "$METADATA" | grep -ozP "(?<=xesam\:title\: )(.*\n)")
+      echo -e "Artist: ${COLOR}$ARTIST${NO_COLOR}"
+      echo -e "Album: ${COLOR}$ALBUM${NO_COLOR}"
+      echo -e "Song: ${COLOR}$SONG${NO_COLOR}"
+
     else
       echo -e "${COLOR}Spotify${NO_COLOR} is ${COLOR}Not running${NO_COLOR}"
     fi
   ;;
-  metadata)
+  meta|metadata)
     if pgrep -x "spotify" > /dev/null
     then
       METADATA=`qdbus \
