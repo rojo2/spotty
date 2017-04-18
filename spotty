@@ -1,6 +1,17 @@
 #!/bin/bash
 COLOR="\x1B[0;32m"
 NO_COLOR="\x1B[0m"
+
+function spotify-open {
+  spotify &> /dev/null &
+  echo -e "Opening ${COLOR}Spotify${NO_COLOR}"
+}
+
+function spotify-close {
+  pkill spotify
+  echo -e "Closing ${COLOR}Spotify${NO_COLOR}"
+}
+
 case $1 in
   status)
     if pgrep -x "spotify" > /dev/null
@@ -68,7 +79,7 @@ case $1 in
                 /org/mpris/MediaPlayer2\
                 org.mpris.MediaPlayer2.Player.PlayPause > /dev/null
     else
-      spotify
+      spotify-open
     fi
   ;;
   next)
@@ -90,15 +101,13 @@ case $1 in
   close|quit)
     if pgrep -x "spotify" > /dev/null
     then
-      dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify\
-                /org/mpris/MediaPlayer2\
-                org.mpris.MediaPlayer2.Player.Quit > /dev/null
+      pkill spotify
     fi
   ;;
   open|start)
     if ! pgrep -x "spotify" > /dev/null
     then
-      spotify &
+      spotify-open
     fi
   ;;
   version)
