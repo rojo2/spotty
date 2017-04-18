@@ -1,0 +1,52 @@
+#!/bin/sh
+case $1 in 
+  play)
+    if pgrep -x "spotify" > /dev/null
+    then
+      dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify\
+                /org/mpris/MediaPlayer2\
+                org.mpris.MediaPlayer2.Player.Play > /dev/null
+    fi
+  ;;
+  pause)
+    if pgrep -x "spotify" > /dev/null
+    then
+      dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify\
+                /org/mpris/MediaPlayer2\
+                org.mpris.MediaPlayer2.Player.Pause > /dev/null
+    fi
+  ;;
+  play-pause|toggle)
+    if pgrep -x "spotify" > /dev/null
+    then
+      dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify\
+                /org/mpris/MediaPlayer2\
+                org.mpris.MediaPlayer2.Player.PlayPause > /dev/null
+    else
+      spotify
+    fi
+  ;;
+  next)
+    if pgrep -x "spotify" > /dev/null
+    then
+      dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify\
+                /org/mpris/MediaPlayer2\
+                org.mpris.MediaPlayer2.Player.Next > /dev/null
+    fi
+  ;;
+  prev)
+    if pgrep -x "spotify" > /dev/null
+    then
+      dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify\
+                /org/mpris/MediaPlayer2\
+                org.mpris.MediaPlayer2.Player.Previous > /dev/null
+    fi
+  ;;
+  open)
+    if ! pgrep -x "spotify" > /dev/null 
+    then
+      spotify
+    fi
+  ;;
+esac
+
