@@ -2,7 +2,7 @@
 
 ![](extra/logo-small.png)
 
-Spotty allows you to control Spotify from the terminal or assign its commands
+Spotty allows you to control Spotify through the terminal or assign its commands
 to a keyboard shortcut.
 
 ## Play / Pause
