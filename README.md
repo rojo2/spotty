@@ -1,6 +1,6 @@
 # Spotty
 
-![](extra/logo.png)
+![](extra/logo-small.png)
 
 Spotty allows you to control Spotify from the terminal or assign its commands
 to a keyboard shortcut.
